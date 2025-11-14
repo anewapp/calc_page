@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Crude Oil Calculator</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 5px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            line-height: 1.2;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .app {
+            max-width: 390px;
+            height: calc(100vh - 10px);
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 12px 15px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+        .header .subtitle {
+            font-size: 0.75em;
+            opacity: 0.9;
+            margin-top: 3px;
+        }
+        .content {
+            padding: 12px 15px;
+            flex: 1;
+            overflow-y: auto;
+        }
+        .input-group {
+            margin-bottom: 12px;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: #333;
+            font-size: 0.85em;
+        }
+        .label-info {
+            font-size: 0.7em;
+            color: #666;
+            font-weight: 400;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            background: #fafafa;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #2c3e50;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(44, 62, 80, 0.1);
+        }
+        .price-container {
+            position: relative;
+        }
+        .clear-btn {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .results {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+            border: 1px solid #dee2e6;
+        }
+        .investment-info {
+            margin-bottom: 8px;
+        }
+        .investment-info p {
+            margin: 4px 0;
+            font-weight: 500;
+            padding: 6px 8px;
+            background: white;
+            border-radius: 4px;
+            border-left: 3px solid #2c3e50;
+            font-size: 0.85em;
+        }
+        .target-section {
+            background: white;
+            border-radius: 6px;
+            padding: 8px;
+            margin-top: 8px;
+        }
+        .target-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 8px;
+            margin: 4px 0;
+            background: #f8f9fa;
+            border-radius: 4px;
+            border-left: 3px solid #27ae60;
+        }
+        .target-label {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 0.8em;
+        }
+        .target-value {
+            font-weight: 700;
+            color: #27ae60;
+            font-size: 0.9em;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+            margin-top: 8px;
+        }
+        .info-card {
+            background: white;
+            padding: 6px;
+            border-radius: 4px;
+            text-align: center;
+            border: 1px solid #e9ecef;
+        }
+        .info-card .title {
+            font-size: 0.7em;
+            color: #666;
+            margin-bottom: 2px;
+        }
+        .info-card .value {
+            font-weight: 700;
+            color: #2c3e50;
+            font-size: 0.75em;
+        }
+        .formula-note {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 4px;
+            padding: 6px;
+            margin-top: 8px;
+            font-size: 0.7em;
+            color: #856404;
+            line-height: 1.3;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app">
+    <div class="header">
+        <h1>🛢️ Crude Oil Calculator</h1>
+        <div class="subtitle">CRUDEOILM - Mini Contract</div>
+    </div>
+    
+    <div class="content">
+        <div class="input-group">
+            <label for="entryPrice">
+                Entry Price (₹)
+                <span class="label-info">Per Barrel Entry Price</span>
+            </label>
+            <div class="price-container">
+                <input type="number" id="entryPrice" value="6000" step="0.1" oninput="calculate()">
+                <button class="clear-btn" onclick="clearEntry()">×</button>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label for="quantity">
+                Quantity (Lots)
+                <span class="label-info">1 Lot = 10 BBL (Barrels)</span>
+            </label>
+            <input type="number" id="quantity" value="100" oninput="calculate()">
+        </div>
+
+        <div class="input-group">
+            <label for="targetAmount">
+                Target Profit (₹)
+                <span class="label-info">Desired profit amount</span>
+            </label>
+            <input type="number" id="targetAmount" value="1000" oninput="calculate()">
+        </div>
+
+        <div class="results" id="results">
+            <div class="investment-info">
+                <p id="totalLots">📊 Total Lots: 100</p>
+                <p id="totalBarrels">🛢️ Total Barrels: 1,000 BBL</p>
+                <p id="lotValue">💰 Lot Value: ₹10 per ₹1 move</p>
+            </div>
+            
+            <div class="target-section">
+                <h4 style="margin: 0 0 8px 0; color: #2c3e50; font-size: 0.9em;">📈 Target Analysis</h4>
+                
+                <div class="target-row">
+                    <span class="target-label">Required Move:</span>
+                    <span class="target-value" id="requiredMove">+₹10.00</span>
+                </div>
+                
+                <div class="target-row">
+                    <span class="target-label">Target Price:</span>
+                    <span class="target-value" id="targetPrice">₹6,010.00</span>
+                </div>
+                
+                <div class="target-row">
+                    <span class="target-label">Percentage Move:</span>
+                    <span class="target-value" id="percentageMove">+0.17%</span>
+                </div>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="title">Contract Size</div>
+                    <div class="value">10 BBL</div>
+                </div>
+                <div class="info-card">
+                    <div class="title">Tick Value</div>
+                    <div class="value">₹10 per ₹1</div>
+                </div>
+                <div class="info-card">
+                    <div class="title">Total Exposure</div>
+                    <div class="value" id="totalExposure">₹60,00,000</div>
+                </div>
+                <div class="info-card">
+                    <div class="title">Risk per Lot</div>
+                    <div class="value">₹10 per ₹1</div>
+                </div>
+            </div>
+
+            <div class="formula-note">
+                <strong>Formula:</strong> Required Move = Target Profit ÷ (Quantity × ₹10)<br>
+                <strong>Example:</strong> ₹1000 ÷ (100 × ₹10) = ₹1 move needed
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function clearEntry() {
+    document.getElementById('entryPrice').value = '';
+    document.getElementById('entryPrice').focus();
+    calculate();
+}
+
+function calculate() {
+    const entryPrice = parseFloat(document.getElementById('entryPrice').value) || 0;
+    const quantity = parseFloat(document.getElementById('quantity').value) || 0;
+    const targetAmount = parseFloat(document.getElementById('targetAmount').value) || 0;
+    
+    // Validate inputs
+    if (entryPrice <= 0 || quantity <= 0) {
+        document.getElementById('totalLots').textContent = '📊 Enter valid values';
+        document.getElementById('totalBarrels').textContent = '';
+        document.getElementById('requiredMove').textContent = '--';
+        document.getElementById('targetPrice').textContent = '--';
+        document.getElementById('percentageMove').textContent = '--';
+        document.getElementById('totalExposure').textContent = '--';
+        return;
+    }
+
+    // Calculate basic values
+    const totalBarrels = quantity * 10; // 1 lot = 10 barrels
+    const totalExposure = entryPrice * totalBarrels;
+    
+    // Calculate required move for target profit
+    // Formula: Each ₹1 move = ₹10 profit per lot
+    const profitPerRupeeMove = quantity * 10;
+    const requiredMove = targetAmount / profitPerRupeeMove;
+    
+    // Calculate target price and percentage
+    const targetPrice = entryPrice + requiredMove;
+    const percentageMove = (requiredMove / entryPrice) * 100;
+    
+    // Update display
+    document.getElementById('totalLots').textContent = 
+        `📊 Total Lots: ${quantity.toLocaleString('en-IN')}`;
+    document.getElementById('totalBarrels').textContent = 
+        `🛢️ Total Barrels: ${totalBarrels.toLocaleString('en-IN')} BBL`;
+    document.getElementById('lotValue').textContent = 
+        `💰 Total Risk: ₹${profitPerRupeeMove.toLocaleString('en-IN')} per ₹1 move`;
+    
+    // Target analysis
+    document.getElementById('requiredMove').textContent = 
+        `${requiredMove >= 0 ? '+' : ''}₹${requiredMove.toFixed(2)}`;
+    document.getElementById('targetPrice').textContent = 
+        `₹${targetPrice.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+    document.getElementById('percentageMove').textContent = 
+        `${percentageMove >= 0 ? '+' : ''}${percentageMove.toFixed(3)}%`;
+    document.getElementById('totalExposure').textContent = 
+        `₹${totalExposure.toLocaleString('en-IN')}`;
+}
+
+// Initialize calculation on page load
+document.addEventListener('DOMContentLoaded', calculate);
+</script>
+
+</body>
+</html>
