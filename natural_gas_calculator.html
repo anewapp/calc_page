@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Crude Oil Calculator</title>
+    <title>Natural Gas Calculator</title>
     <style>
         * { box-sizing: border-box; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
             margin: 0;
             padding: 5px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
             line-height: 1.2;
             height: 100vh;
             overflow: hidden;
@@ -27,7 +27,7 @@
             flex-direction: column;
         }
         .header {
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            background: linear-gradient(135deg, #2E7D32 0%, #388E3C 100%);
             color: white;
             padding: 12px 15px;
             text-align: center;
@@ -115,9 +115,9 @@
         }
         input:focus, select:focus {
             outline: none;
-            border-color: #2c3e50;
+            border-color: #2E7D32;
             background: white;
-            box-shadow: 0 0 0 3px rgba(44, 62, 80, 0.1);
+            box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
         }
         .price-container {
             position: relative;
@@ -152,7 +152,7 @@
             padding: 6px 8px;
             background: white;
             border-radius: 4px;
-            border-left: 3px solid #2c3e50;
+            border-left: 3px solid #2E7D32;
             font-size: 0.85em;
         }
         .target-section {
@@ -169,16 +169,16 @@
             margin: 4px 0;
             background: #f8f9fa;
             border-radius: 4px;
-            border-left: 3px solid #27ae60;
+            border-left: 3px solid #4CAF50;
         }
         .target-label {
             font-weight: 600;
-            color: #2c3e50;
+            color: #2E7D32;
             font-size: 0.8em;
         }
         .target-value {
             font-weight: 700;
-            color: #27ae60;
+            color: #4CAF50;
             font-size: 0.9em;
         }
         .info-grid {
@@ -201,7 +201,7 @@
         }
         .info-card .value {
             font-weight: 700;
-            color: #2c3e50;
+            color: #2E7D32;
             font-size: 0.75em;
         }
         .formula-note {
@@ -222,26 +222,24 @@
     <div class="header">
         <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 8px; position: relative;">
             <a href="index.html" style="position: absolute; left: 0; color: white; text-decoration: none; font-size: 2.5em; opacity: 0.9;">🏠</a>
-            <h1 style="margin: 0; font-size: 1.1em;">🛢️ Crude Oil Calculator</h1>
+            <h1 style="margin: 0; font-size: 1.1em;">💨 Natural Gas Calculator</h1>
             <a href="#" onclick="window.open('https://zerodha.com/brokerage-calculator/#tab-commodities', '_blank', 'noopener,noreferrer'); return false;" style="color: white; text-decoration: none; font-size: 2.5em; opacity: 0.9;">🧮</a>
         </div>
-        <div class="subtitle" id="contractSubtitle">CRUDEOILM - Mini Contract</div>
+        <div class="subtitle" id="contractSubtitle">NATGASMINI - Mini Contract</div>
         <div style="display: flex; justify-content: center; gap: 15px; margin-top: 4px;">
             <div style="display: flex; align-items: center; gap: 4px;">
                 <input type="radio" id="miniContract" name="contractType" value="mini" checked onchange="switchContract()" style="margin: 0; width: 12px; height: 12px;">
-                <label for="miniContract" style="margin: 0; font-size: 0.7em; color: white; font-weight: 500; white-space: nowrap;">CRUDEOIL MINI</label>
+                <label for="miniContract" style="margin: 0; font-size: 0.7em; color: white; font-weight: 500; white-space: nowrap;">NATGAS MINI</label>
             </div>
             <div style="display: flex; align-items: center; gap: 4px;">
                 <input type="radio" id="fullContract" name="contractType" value="full" onchange="switchContract()" style="margin: 0; width: 12px; height: 12px;">
-                <label for="fullContract" style="margin: 0; font-size: 0.7em; color: white; font-weight: 500; white-space: nowrap;">CRUDEOIL</label>
+                <label for="fullContract" style="margin: 0; font-size: 0.7em; color: white; font-weight: 500; white-space: nowrap;">NATURALGAS</label>
             </div>
         </div>
         <div style="display: flex; justify-content: center; align-items: center; margin-top: 6px; flex-wrap: wrap; gap: 6px;">
-            <a href="#" onclick="window.open('https://www.tradingview.com/chart/LeJ9b8NX/?symbol=NYMEX%3ACL1%21', '_blank', 'noopener,noreferrer'); return false;" style="color: white; text-decoration: none; font-size: 0.65em; opacity: 0.9;">📈 CL1!</a>
-            <a href="#" onclick="window.open('https://www.tradingview.com/chart/LeJ9b8NX/?symbol=TVC%3AUSOIL', '_blank', 'noopener,noreferrer'); return false;" style="color: white; text-decoration: none; font-size: 0.65em; opacity: 0.9;">📈 USOIL</a>
-            <a href="#" onclick="window.open('https://www.tradingview.com/chart/LeJ9b8NX/?symbol=MCX%3ACRUDEOILM1%21', '_blank', 'noopener,noreferrer'); return false;" style="color: white; text-decoration: none; font-size: 0.65em; opacity: 0.9;">📈 CRUDEOILM1!</a>
-            <a href="#" onclick="window.open('https://zerodha.com/brokerage-calculator/#tab-commodities', '_blank', 'noopener,noreferrer'); return false;" style="color: white; text-decoration: none; font-size: 0.65em; opacity: 0.9;">🧮 Calc</a>
-            <a href="natural_gas_calculator.html" style="color: white; text-decoration: none; font-size: 0.65em; opacity: 0.9;">💨 Natural Gas</a>
+            <a href="#" onclick="window.open('https://www.tradingview.com/chart/LeJ9b8NX/?symbol=NYMEX%3ANG1%21', '_blank', 'noopener,noreferrer'); return false;" style="color: white; text-decoration: none; font-size: 0.65em; opacity: 0.9;">📈 NG1!</a>
+            <a href="#" onclick="window.open('https://www.tradingview.com/chart/LeJ9b8NX/?symbol=MCX%3ANATURALGAS1%21', '_blank', 'noopener,noreferrer'); return false;" style="color: white; text-decoration: none; font-size: 0.65em; opacity: 0.9;">📈 NATURALGAS1!</a>
+            <a href="crude_oil_calculator.html" style="color: white; text-decoration: none; font-size: 0.65em; opacity: 0.9;">🛢️ Crude Oil</a>
             <a href="stock_calculator_mobile.html" style="color: white; text-decoration: none; font-size: 0.65em; opacity: 0.9;">📈 Stock</a>
         </div>
     </div>
@@ -269,7 +267,7 @@
                         <input type="number" id="targetAmount" value="1500" step="100" oninput="calculate()">
                     </div>
                     <div id="changeField" style="display: none; position: relative;">
-                        <input type="number" id="changePoint" value="6" step="0.1" placeholder="±0.0" oninput="calculate()">
+                        <input type="number" id="changePoint" value="10" step="0.1" placeholder="±0.0" oninput="calculate()">
                         <button class="clear-btn" onclick="clearChange()">×</button>
                     </div>
                 </div>
@@ -292,20 +290,20 @@
 
         <div class="results" id="results">
             <div class="target-section">
-                <h4 style="margin: 0 0 8px 0; color: #2c3e50; font-size: 0.9em;" id="analysisTitle">📈 Target Analysis (Invested: <span id="investedAmount">--</span>)</h4>
+                <h4 style="margin: 0 0 8px 0; color: #2E7D32; font-size: 0.9em;" id="analysisTitle">📈 Target Analysis (Invested: <span id="investedAmount">--</span>)</h4>
                 
-                <div class="target-compact-row" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; padding: 8px; background: #f8f9fa; border-radius: 4px; border-left: 3px solid #27ae60;">
+                <div class="target-compact-row" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; padding: 8px; background: #f8f9fa; border-radius: 4px; border-left: 3px solid #4CAF50;">
                     <div style="text-align: center;">
                         <div style="font-size: 0.7em; color: #666; margin-bottom: 2px;" id="moveLabel">Required Move</div>
-                        <div style="font-weight: 700; color: #27ae60; font-size: 0.85em;" id="requiredMove">+₹15.00</div>
+                        <div style="font-weight: 700; color: #4CAF50; font-size: 0.85em;" id="requiredMove">+₹1.00</div>
                     </div>
                     <div style="text-align: center;">
                         <div style="font-size: 0.7em; color: #666; margin-bottom: 2px;">Target Price</div>
-                        <div style="font-weight: 700; color: #27ae60; font-size: 0.85em;" id="targetPrice">₹115.00 <span id="percentageMove" style="font-size: 0.75em; color: #666;">(+15%)</span></div>
+                        <div style="font-weight: 700; color: #4CAF50; font-size: 0.85em;" id="targetPrice">₹201.00 <span id="percentageMove" style="font-size: 0.75em; color: #666;">(+0.5%)</span></div>
                     </div>
                     <div style="text-align: center;" id="profitColumn" style="display: none;">
                         <div style="font-size: 0.7em; color: #666; margin-bottom: 2px;">Profit/Loss</div>
-                        <div style="font-weight: 700; font-size: 0.85em;" id="profitAmount">+₹1,500.00</div>
+                        <div style="font-weight: 700; font-size: 0.85em;" id="profitAmount">+₹2,500.00</div>
                     </div>
                 </div>
             </div>
@@ -313,31 +311,31 @@
             <div class="info-grid">
                 <div class="info-card">
                     <div class="title">Contract Size</div>
-                    <div class="value" id="contractSize">10 BBL</div>
+                    <div class="value" id="contractSize">250 MMBtu</div>
                 </div>
                 <div class="info-card">
                     <div class="title">Tick Value</div>
-                    <div class="value" id="tickValue">₹10 per ₹1</div>
+                    <div class="value" id="tickValue">₹250 per ₹1</div>
                 </div>
                 <div class="info-card">
                     <div class="title">Total Exposure</div>
-                    <div class="value" id="totalExposure">₹60,00,000</div>
+                    <div class="value" id="totalExposure">₹5,00,000</div>
                 </div>
                 <div class="info-card">
                     <div class="title">Risk per Lot</div>
-                    <div class="value" id="riskPerLot">₹10 per ₹1</div>
+                    <div class="value" id="riskPerLot">₹250 per ₹1</div>
                 </div>
             </div>
 
             <div class="investment-info">
                 <p id="totalLots">📊 Total Lots: 10</p>
-                <p id="totalBarrels">🛢️ Total Barrels: 100 BBL</p>
-                <p id="lotValue">💰 Total Risk: ₹100 per ₹1 move</p>
+                <p id="totalMMBtu">💨 Total MMBtu: 2,500 MMBtu</p>
+                <p id="lotValue">💰 Total Risk: ₹2,500 per ₹1 move</p>
             </div>
 
             <div class="formula-note" id="formulaNote">
-                <strong>Formula:</strong> Required Move = Target Profit ÷ (Quantity × ₹10)<br>
-                <strong>Example:</strong> ₹1000 ÷ (10 × ₹10) = ₹10 move needed
+                <strong>Formula:</strong> Required Move = Target Profit ÷ (Quantity × ₹250)<br>
+                <strong>Example:</strong> ₹2500 ÷ (10 × ₹250) = ₹1 move needed
             </div>
         </div>
     </div>
@@ -353,17 +351,17 @@ function switchContract() {
     const quantityInput = document.getElementById('quantity');
     
     if (contractType === 'mini') {
-        subtitle.textContent = 'CRUDEOILM - Mini Contract';
-        contractSize.textContent = '10 BBL';
-        tickValue.textContent = '₹10 per ₹1';
-        riskPerLot.textContent = '₹10 per ₹1';
-        quantityInput.value = '10'; // Default 10 lots for CRUDEOIL MINI
+        subtitle.textContent = 'NATGASMINI - Mini Contract';
+        contractSize.textContent = '250 MMBtu';
+        tickValue.textContent = '₹250 per ₹1';
+        riskPerLot.textContent = '₹250 per ₹1';
+        quantityInput.value = '10'; // Default 10 lots for NATGAS MINI
     } else {
-        subtitle.textContent = 'CRUDEOIL - Full Contract';
-        contractSize.textContent = '100 BBL';
-        tickValue.textContent = '₹100 per ₹1';
-        riskPerLot.textContent = '₹100 per ₹1';
-        quantityInput.value = '2'; // Default 2 lots for CRUDEOIL
+        subtitle.textContent = 'NATURALGAS - Full Contract';
+        contractSize.textContent = '1250 MMBtu';
+        tickValue.textContent = '₹1250 per ₹1';
+        riskPerLot.textContent = '₹1250 per ₹1';
+        quantityInput.value = '2'; // Default 2 lots for NATURALGAS
     }
     
     calculate();
@@ -414,7 +412,7 @@ function calculate() {
     // Validate inputs
     if (entryPrice <= 0 || quantity <= 0) {
         document.getElementById('totalLots').textContent = '📊 Enter valid values';
-        document.getElementById('totalBarrels').textContent = '';
+        document.getElementById('totalMMBtu').textContent = '';
         document.getElementById('requiredMove').textContent = '--';
         document.getElementById('targetPrice').textContent = '--';
         document.getElementById('percentageMove').textContent = '--';
@@ -425,17 +423,17 @@ function calculate() {
     }
 
     // Calculate basic values based on contract type
-    const barrelPerLot = contractType === 'mini' ? 10 : 100; // Mini: 10 BBL, Full: 100 BBL
-    const profitPerRupee = contractType === 'mini' ? 10 : 100; // Mini: ₹10, Full: ₹100
-    const totalBarrels = quantity * barrelPerLot;
-    const totalExposure = entryPrice * totalBarrels;
+    const mmBtuPerLot = contractType === 'mini' ? 250 : 1250; // Mini: 250 MMBtu, Full: 1250 MMBtu
+    const profitPerRupee = contractType === 'mini' ? 250 : 1250; // Mini: ₹250, Full: ₹1250
+    const totalMMBtu = quantity * mmBtuPerLot;
+    const totalExposure = entryPrice * totalMMBtu;
     const profitPerRupeeMove = quantity * profitPerRupee;
     
     // Update basic display
     document.getElementById('totalLots').textContent = 
         `📊 Total Lots: ${quantity.toLocaleString('en-IN')}`;
-    document.getElementById('totalBarrels').textContent = 
-        `🛢️ Total Barrels: ${totalBarrels.toLocaleString('en-IN')} BBL`;
+    document.getElementById('totalMMBtu').textContent = 
+        `💨 Total MMBtu: ${totalMMBtu.toLocaleString('en-IN')} MMBtu`;
     document.getElementById('lotValue').textContent = 
         `💰 Total Risk: ₹${profitPerRupeeMove.toLocaleString('en-IN')} per ₹1 move`;
     document.getElementById('totalExposure').textContent = 
@@ -446,8 +444,8 @@ function calculate() {
 
     // Update formula note
     const formulaNote = document.getElementById('formulaNote');
-    const profitMultiplier = contractType === 'mini' ? '₹10' : '₹100';
-    formulaNote.innerHTML = `<strong>Formula:</strong> Required Move = Target Profit ÷ (Quantity × ${profitMultiplier})<br><strong>Example:</strong> ₹1000 ÷ (${quantity} × ${profitMultiplier}) = ₹${quantity > 0 ? (1000 / profitPerRupeeMove).toFixed(2) : '0.00'} move needed`;
+    const profitMultiplier = contractType === 'mini' ? '₹250' : '₹1250';
+    formulaNote.innerHTML = `<strong>Formula:</strong> Required Move = Target Profit ÷ (Quantity × ${profitMultiplier})<br><strong>Example:</strong> ₹2500 ÷ (${quantity} × ${profitMultiplier}) = ₹${quantity > 0 ? (2500 / profitPerRupeeMove).toFixed(2) : '0.00'} move needed`;
 
     if (mode === 'change') {
         // Change Point Mode
@@ -470,7 +468,7 @@ function calculate() {
             document.getElementById('profitColumn').style.display = 'block';
             document.getElementById('profitAmount').textContent = 
                 `${profit >= 0 ? '+' : ''}₹${Math.abs(profit).toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-            document.getElementById('profitAmount').style.color = profit >= 0 ? '#27ae60' : '#e74c3c';
+            document.getElementById('profitAmount').style.color = profit >= 0 ? '#4CAF50' : '#e74c3c';
         } else {
             // Clear results if no change point
             document.getElementById('moveLabel').textContent = 'Price Change';
