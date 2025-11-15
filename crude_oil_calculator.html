@@ -49,26 +49,68 @@
             overflow-y: auto;
         }
         .input-group {
-            margin-bottom: 12px;
+            margin-bottom: 8px;
+        }
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 0.6fr 1.2fr 0.8fr;
+            gap: 6px;
+            align-items: end;
+        }
+        .radio-compact {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            font-size: 0.65em;
+        }
+        .radio-compact input[type="radio"] {
+            width: auto;
+            margin: 0 3px 0 0;
+        }
+        .input-field {
+            display: flex;
+            flex-direction: column;
+        }
+        .radio-group {
+            margin-bottom: 10px;
+        }
+        .radio-options {
+            display: flex;
+            gap: 15px;
+            margin-top: 4px;
+        }
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .radio-option input[type="radio"] {
+            width: auto;
+            margin: 0;
+        }
+        .radio-option label {
+            margin: 0;
+            font-size: 0.75em;
+            font-weight: 500;
         }
         label {
             display: block;
             font-weight: 600;
             margin-bottom: 4px;
             color: #333;
-            font-size: 0.85em;
+            font-size: 0.75em;
         }
         .label-info {
-            font-size: 0.7em;
+            font-size: 0.65em;
             color: #666;
             font-weight: 400;
         }
         input, select {
             width: 100%;
-            padding: 10px;
+            padding: 8px 6px;
             border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 16px;
+            border-radius: 4px;
+            font-size: 14px;
             background: #fafafa;
         }
         input:focus, select:focus {
@@ -82,16 +124,16 @@
         }
         .clear-btn {
             position: absolute;
-            right: 12px;
+            right: 20px;
             top: 50%;
             transform: translateY(-50%);
             background: #e74c3c;
             color: white;
             border: none;
             border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            font-size: 14px;
+            width: 18px;
+            height: 18px;
+            font-size: 10px;
             cursor: pointer;
         }
         .results {
@@ -188,55 +230,65 @@
     
     <div class="content">
         <div class="input-group">
-            <label for="entryPrice">
-                Entry Price (₹)
-                <span class="label-info">Per Barrel Entry Price</span>
-            </label>
-            <div class="price-container">
-                <input type="number" id="entryPrice" value="100" step="0.1" oninput="calculate()">
-                <button class="clear-btn" onclick="clearEntry()">×</button>
+            <div class="input-row">
+                <div class="input-field">
+                    <label for="entryPrice">Entry Price (₹)</label>
+                    <div class="price-container">
+                        <input type="number" id="entryPrice" value="100" step="1" oninput="calculate()">
+                        <button class="clear-btn" onclick="clearEntry()">×</button>
+                    </div>
+                </div>
+                
+                <div class="input-field">
+                    <label for="quantity">Lots</label>
+                    <input type="number" id="quantity" value="10" oninput="calculate()">
+                </div>
+                
+                <div class="input-field">
+                    <label for="targetAmount">Target/Change (₹)</label>
+                    <div id="targetField" style="position: relative;">
+                        <button class="clear-btn" onclick="clearTarget()">×</button>
+                        <input type="number" id="targetAmount" value="1500" step="100" oninput="calculate()">
+                    </div>
+                    <div id="changeField" style="display: none; position: relative;">
+                        <input type="number" id="changePoint" value="6" step="0.1" placeholder="±0.0" oninput="calculate()">
+                        <button class="clear-btn" onclick="clearChange()">×</button>
+                    </div>
+                </div>
+                
+                <div class="input-field">
+                    <label style="margin-bottom: 4px; font-size: 0.75em; color: #333; font-weight: 600;">Mode</label>
+                    <div style="display: flex; flex-direction: column; gap: 2px; justify-content: center; height: 40px;">
+                        <div style="display: flex; align-items: center; gap: 4px;">
+                            <input type="radio" id="targetMode" name="calculationMode" value="target" checked onchange="toggleMode(); calculate();" style="margin: 0; width: 12px; height: 12px;">
+                            <label for="targetMode" style="margin: 0; font-size: 0.65em; color: #666; font-weight: 500; white-space: nowrap;">Target</label>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 3px;">
+                            <input type="radio" id="changeMode" name="calculationMode" value="change" onchange="toggleMode(); calculate();" style="margin: 0; width: 12px; height: 12px;">
+                            <label for="changeMode" style="margin: 0; font-size: 0.65em; color: #666; font-weight: 500; white-space: nowrap;">Change</label>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-
-        <div class="input-group">
-            <label for="quantity">
-                Quantity (Lots)
-                <span class="label-info">1 Lot = 10 BBL (Barrels)</span>
-            </label>
-            <input type="number" id="quantity" value="10" oninput="calculate()">
-        </div>
-
-        <div class="input-group">
-            <label for="targetAmount">
-                Target Profit (₹)
-                <span class="label-info">Desired profit amount</span>
-            </label>
-            <input type="number" id="targetAmount" value="1500" oninput="calculate()">
         </div>
 
         <div class="results" id="results">
-            <div class="investment-info">
-                <p id="totalLots">📊 Total Lots: 100</p>
-                <p id="totalBarrels">🛢️ Total Barrels: 1,000 BBL</p>
-                <p id="lotValue">💰 Lot Value: ₹10 per ₹1 move</p>
-            </div>
-            
             <div class="target-section">
-                <h4 style="margin: 0 0 8px 0; color: #2c3e50; font-size: 0.9em;">📈 Target Analysis</h4>
+                <h4 style="margin: 0 0 8px 0; color: #2c3e50; font-size: 0.9em;" id="analysisTitle">📈 Target Analysis (Invested: <span id="investedAmount">--</span>)</h4>
                 
-                <div class="target-row">
-                    <span class="target-label">Required Move:</span>
-                    <span class="target-value" id="requiredMove">+₹10.00</span>
-                </div>
-                
-                <div class="target-row">
-                    <span class="target-label">Target Price:</span>
-                    <span class="target-value" id="targetPrice">₹6,010.00</span>
-                </div>
-                
-                <div class="target-row">
-                    <span class="target-label">Percentage Move:</span>
-                    <span class="target-value" id="percentageMove">+0.17%</span>
+                <div class="target-compact-row" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; padding: 8px; background: #f8f9fa; border-radius: 4px; border-left: 3px solid #27ae60;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 0.7em; color: #666; margin-bottom: 2px;" id="moveLabel">Required Move</div>
+                        <div style="font-weight: 700; color: #27ae60; font-size: 0.85em;" id="requiredMove">+₹15.00</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 0.7em; color: #666; margin-bottom: 2px;">Target Price</div>
+                        <div style="font-weight: 700; color: #27ae60; font-size: 0.85em;" id="targetPrice">₹115.00 <span id="percentageMove" style="font-size: 0.75em; color: #666;">(+15%)</span></div>
+                    </div>
+                    <div style="text-align: center;" id="profitColumn" style="display: none;">
+                        <div style="font-size: 0.7em; color: #666; margin-bottom: 2px;">Profit/Loss</div>
+                        <div style="font-weight: 700; font-size: 0.85em;" id="profitAmount">+₹1,500.00</div>
+                    </div>
                 </div>
             </div>
 
@@ -259,6 +311,12 @@
                 </div>
             </div>
 
+            <div class="investment-info">
+                <p id="totalLots">📊 Total Lots: 10</p>
+                <p id="totalBarrels">🛢️ Total Barrels: 100 BBL</p>
+                <p id="lotValue">💰 Total Risk: ₹100 per ₹1 move</p>
+            </div>
+
             <div class="formula-note">
                 <strong>Formula:</strong> Required Move = Target Profit ÷ (Quantity × ₹10)<br>
                 <strong>Example:</strong> ₹1000 ÷ (100 × ₹10) = ₹1 move needed
@@ -274,10 +332,39 @@ function clearEntry() {
     calculate();
 }
 
+function clearTarget() {
+    document.getElementById('targetAmount').value = '';
+    document.getElementById('targetAmount').focus();
+    calculate();
+}
+
+function clearChange() {
+    document.getElementById('changePoint').value = '';
+    document.getElementById('changePoint').focus();
+    calculate();
+}
+
+function toggleMode() {
+    const mode = document.querySelector('input[name="calculationMode"]:checked').value;
+    const targetField = document.getElementById('targetField');
+    const changeField = document.getElementById('changeField');
+    
+    if (mode === 'target') {
+        targetField.style.display = 'flex';
+        changeField.style.display = 'none';
+    } else {
+        targetField.style.display = 'none';
+        changeField.style.display = 'flex';
+    }
+}
+
 function calculate() {
+    console.log('Calculate function called'); // Debug log
     const entryPrice = parseFloat(document.getElementById('entryPrice').value) || 0;
     const quantity = parseFloat(document.getElementById('quantity').value) || 0;
-    const targetAmount = parseFloat(document.getElementById('targetAmount').value) || 0;
+    const modeElement = document.querySelector('input[name="calculationMode"]:checked');
+    const mode = modeElement ? modeElement.value : 'target';
+    console.log('Values:', {entryPrice, quantity, mode}); // Debug log
     
     // Validate inputs
     if (entryPrice <= 0 || quantity <= 0) {
@@ -287,43 +374,93 @@ function calculate() {
         document.getElementById('targetPrice').textContent = '--';
         document.getElementById('percentageMove').textContent = '--';
         document.getElementById('totalExposure').textContent = '--';
+        document.getElementById('investedAmount').textContent = '--';
+        document.getElementById('profitRow').style.display = 'none';
         return;
     }
 
     // Calculate basic values
     const totalBarrels = quantity * 10; // 1 lot = 10 barrels
     const totalExposure = entryPrice * totalBarrels;
-    
-    // Calculate required move for target profit
-    // Formula: Each ₹1 move = ₹10 profit per lot
     const profitPerRupeeMove = quantity * 10;
-    const requiredMove = targetAmount / profitPerRupeeMove;
     
-    // Calculate target price and percentage
-    const targetPrice = entryPrice + requiredMove;
-    const percentageMove = (requiredMove / entryPrice) * 100;
-    
-    // Update display
+    // Update basic display
     document.getElementById('totalLots').textContent = 
         `📊 Total Lots: ${quantity.toLocaleString('en-IN')}`;
     document.getElementById('totalBarrels').textContent = 
         `🛢️ Total Barrels: ${totalBarrels.toLocaleString('en-IN')} BBL`;
     document.getElementById('lotValue').textContent = 
         `💰 Total Risk: ₹${profitPerRupeeMove.toLocaleString('en-IN')} per ₹1 move`;
-    
-    // Target analysis
-    document.getElementById('requiredMove').textContent = 
-        `${requiredMove >= 0 ? '+' : ''}₹${requiredMove.toFixed(2)}`;
-    document.getElementById('targetPrice').textContent = 
-        `₹${targetPrice.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-    document.getElementById('percentageMove').textContent = 
-        `${percentageMove >= 0 ? '+' : ''}${percentageMove.toFixed(3)}%`;
     document.getElementById('totalExposure').textContent = 
         `₹${totalExposure.toLocaleString('en-IN')}`;
+
+    // Update invested amount in title
+    document.getElementById('investedAmount').textContent = `₹${totalExposure.toLocaleString('en-IN')}`;
+
+    if (mode === 'change') {
+        // Change Point Mode
+        const changePointInput = document.getElementById('changePoint');
+        const changePoint = changePointInput ? parseFloat(changePointInput.value) || 0 : 0;
+        
+        if (changePoint !== 0) {
+            const targetPrice = entryPrice + changePoint;
+            const percentageMove = (changePoint / entryPrice) * 100;
+            const profit = changePoint * profitPerRupeeMove;
+            
+            // Update labels and display
+            document.getElementById('moveLabel').textContent = 'Price Change';
+            document.getElementById('requiredMove').textContent = 
+                `${changePoint >= 0 ? '+' : ''}₹${changePoint.toFixed(2)}`;
+            document.getElementById('targetPrice').innerHTML = 
+                `₹${targetPrice.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})} <span id="percentageMove" style="font-size: 0.75em; color: #666;">(${percentageMove >= 0 ? '+' : ''}${percentageMove.toFixed(2)}%)</span>`;
+            
+            // Show profit column
+            document.getElementById('profitColumn').style.display = 'block';
+            document.getElementById('profitAmount').textContent = 
+                `${profit >= 0 ? '+' : ''}₹${Math.abs(profit).toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            document.getElementById('profitAmount').style.color = profit >= 0 ? '#27ae60' : '#e74c3c';
+        } else {
+            // Clear results if no change point
+            document.getElementById('moveLabel').textContent = 'Price Change';
+            document.getElementById('requiredMove').textContent = '--';
+            document.getElementById('targetPrice').innerHTML = '-- <span style="font-size: 0.75em; color: #666;">(--)</span>';
+            document.getElementById('profitColumn').style.display = 'none';
+        }
+        
+    } else {
+        // Target Profit Mode
+        const targetAmountInput = document.getElementById('targetAmount');
+        const targetAmount = targetAmountInput ? parseFloat(targetAmountInput.value) || 0 : 0;
+        
+        if (targetAmount > 0) {
+            const requiredMove = targetAmount / profitPerRupeeMove;
+            const targetPrice = entryPrice + requiredMove;
+            const percentageMove = (requiredMove / entryPrice) * 100;
+            
+            // Update labels and display
+            document.getElementById('moveLabel').textContent = 'Required Move';
+            document.getElementById('requiredMove').textContent = 
+                `${requiredMove >= 0 ? '+' : ''}₹${requiredMove.toFixed(2)}`;
+            document.getElementById('targetPrice').innerHTML = 
+                `₹${targetPrice.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})} <span id="percentageMove" style="font-size: 0.75em; color: #666;">(${percentageMove >= 0 ? '+' : ''}${percentageMove.toFixed(2)}%)</span>`;
+            
+            // Hide profit column in target mode
+            document.getElementById('profitColumn').style.display = 'none';
+        } else {
+            // Clear results if no target amount
+            document.getElementById('moveLabel').textContent = 'Required Move';
+            document.getElementById('requiredMove').textContent = '--';
+            document.getElementById('targetPrice').innerHTML = '-- <span style="font-size: 0.75em; color: #666;">(--)</span>';
+            document.getElementById('profitColumn').style.display = 'none';
+        }
+    }
 }
 
 // Initialize calculation on page load
-document.addEventListener('DOMContentLoaded', calculate);
+document.addEventListener('DOMContentLoaded', function() {
+    toggleMode(); // Set initial mode
+    calculate(); // Run initial calculation
+});
 </script>
 
 </body>
