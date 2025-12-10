@@ -167,7 +167,7 @@
     
     <div class="content">
         <div class="input-group">
-            <div class="input-row">
+            <div class="input-row" style="display: grid; grid-template-columns: 1fr 0.6fr 0.8fr 1.2fr 0.8fr; gap: 6px; align-items: end;">
                 <div class="input-field">
                     <label for="price">Stock Price (₹)</label>
                     <div class="price-container">
@@ -188,10 +188,63 @@
                     <label for="qty" id="qtyLabel">Lots</label>
                     <input type="number" id="qty" value="3" oninput="calc()">
                 </div>
+                
+                <div class="input-field">
+                    <label for="targetAmount">Target/Change/Price</label>
+                    <div id="targetField" style="position: relative;">
+                        <button class="clear-btn" onclick="clearTarget()">×</button>
+                        <input type="number" id="targetAmount" value="2250" step="100" oninput="calc()">
+                    </div>
+                    <div id="changeField" style="display: none; position: relative;">
+                        <input type="number" id="changePercent" value="10" step="0.1" placeholder="±0.0%" oninput="calc()">
+                        <button class="clear-btn" onclick="clearChange()">×</button>
+                    </div>
+                    <div id="priceField" style="display: none; position: relative;">
+                        <input type="number" id="targetPriceInput" value="110" step="0.01" placeholder="Target Price" oninput="calc()">
+                        <button class="clear-btn" onclick="clearTargetPrice()">×</button>
+                    </div>
+                </div>
+                
+                <div class="input-field">
+                    <label style="margin-bottom: 4px; font-size: 0.75em; color: #333; font-weight: 600;">Mode</label>
+                    <div style="display: flex; flex-direction: column; gap: 1px; justify-content: center; height: 50px;">
+                        <div style="display: flex; align-items: center; gap: 2px;">
+                            <input type="radio" id="targetMode" name="calculationMode" value="target" checked onchange="toggleMode(); calc();" style="margin: 0; width: 10px; height: 10px;">
+                            <label for="targetMode" style="margin: 0; font-size: 0.6em; color: #666; font-weight: 500; white-space: nowrap;">Target ₹</label>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 2px;">
+                            <input type="radio" id="changeMode" name="calculationMode" value="change" onchange="toggleMode(); calc();" style="margin: 0; width: 10px; height: 10px;">
+                            <label for="changeMode" style="margin: 0; font-size: 0.6em; color: #666; font-weight: 500; white-space: nowrap;">Change%</label>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 2px;">
+                            <input type="radio" id="priceMode" name="calculationMode" value="price" onchange="toggleMode(); calc();" style="margin: 0; width: 10px; height: 10px;">
+                            <label for="priceMode" style="margin: 0; font-size: 0.6em; color: #666; font-weight: 500; white-space: nowrap;">Target Price</label>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
         <div class="results" id="results">
+            <div class="target-section" style="background: white; border-radius: 6px; padding: 8px; margin-bottom: 8px;">
+                <h4 style="margin: 0 0 8px 0; color: #007AFF; font-size: 0.9em;" id="analysisTitle">📈 Target Analysis (Invested: <span id="investedAmount">--</span>)</h4>
+                
+                <div class="target-compact-row" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; padding: 8px; background: #f8f9fa; border-radius: 4px; border-left: 3px solid #007AFF;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 0.7em; color: #666; margin-bottom: 2px;" id="moveLabel">Required Move</div>
+                        <div style="font-weight: 700; color: #007AFF; font-size: 0.85em;" id="requiredMove">+₹10.00</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 0.7em; color: #666; margin-bottom: 2px;">Target Price</div>
+                        <div style="font-weight: 700; color: #007AFF; font-size: 0.85em;" id="targetPrice">₹110.00 <span id="percentageMove" style="font-size: 0.75em; color: #666;">(+10%)</span></div>
+                    </div>
+                    <div style="text-align: center;" id="profitColumn" style="display: none;">
+                        <div style="font-size: 0.7em; color: #666; margin-bottom: 2px;">Profit/Loss</div>
+                        <div style="font-weight: 700; font-size: 0.85em;" id="profitAmount">+₹2,250.00</div>
+                    </div>
+                </div>
+            </div>
+            
             <div class="investment-info">
                 <p id="totalInvest">💰 Investment: ₹22,500</p>
                 <p id="totalShares">📊 Shares: 225</p>
@@ -204,8 +257,8 @@
                     <div class="profit-amt negative">-₹2,250</div>
                 </div>
                 <div class="target-row profit">
-                    <div class="profit-pct">+6%</div>
-                    <div class="target-price">₹106.00</div>
+                    <div class="profit-pct">+5%</div>
+                    <div class="target-price">₹105.00</div>
                     <div class="profit-amt positive">+₹1,350</div>
                 </div>
                 <div class="target-row profit">
@@ -231,14 +284,58 @@ function clearPrice() {
     calc();
 }
 
+function clearTarget() {
+    document.getElementById('targetAmount').value = '';
+    document.getElementById('targetAmount').focus();
+    calc();
+}
+
+function clearChange() {
+    document.getElementById('changePercent').value = '';
+    document.getElementById('changePercent').focus();
+    calc();
+}
+
+function clearTargetPrice() {
+    document.getElementById('targetPriceInput').value = '';
+    document.getElementById('targetPriceInput').focus();
+    calc();
+}
+
+function toggleMode() {
+    const mode = document.querySelector('input[name="calculationMode"]:checked').value;
+    const targetField = document.getElementById('targetField');
+    const changeField = document.getElementById('changeField');
+    const priceField = document.getElementById('priceField');
+    
+    if (mode === 'target') {
+        targetField.style.display = 'flex';
+        changeField.style.display = 'none';
+        priceField.style.display = 'none';
+    } else if (mode === 'change') {
+        targetField.style.display = 'none';
+        changeField.style.display = 'flex';
+        priceField.style.display = 'none';
+    } else {
+        targetField.style.display = 'none';
+        changeField.style.display = 'none';
+        priceField.style.display = 'flex';
+    }
+}
+
 function calc() {
     const price = parseFloat(document.getElementById('price').value) || 0;
     const qty = parseFloat(document.getElementById('qty').value) || 0;
     const type = document.getElementById('type').value;
+    const modeElement = document.querySelector('input[name="calculationMode"]:checked');
+    const mode = modeElement ? modeElement.value : 'target';
     
     if (price <= 0 || qty <= 0) {
         document.getElementById('totalInvest').textContent = '💰 Enter valid values';
         document.getElementById('totalShares').textContent = '';
+        document.getElementById('requiredMove').textContent = '--';
+        document.getElementById('targetPrice').textContent = '--';
+        document.getElementById('investedAmount').textContent = '--';
         return;
     }
 
@@ -249,8 +346,99 @@ function calc() {
         `💰 Investment: ₹${investment.toLocaleString('en-IN')}`;
     document.getElementById('totalShares').textContent = 
         `📊 Shares: ${shares}`;
+    document.getElementById('investedAmount').textContent = `₹${investment.toLocaleString('en-IN')}`;
 
-    const percentages = [-10, 6, 10];
+    if (mode === 'change') {
+        // Change Percentage Mode
+        const changePercentInput = document.getElementById('changePercent');
+        const changePercent = changePercentInput ? parseFloat(changePercentInput.value) || 0 : 0;
+        
+        if (changePercent !== 0) {
+            const targetPriceValue = price * (1 + changePercent / 100);
+            const totalValue = targetPriceValue * shares;
+            const profit = totalValue - investment;
+            
+            // Update labels and display
+            document.getElementById('moveLabel').textContent = 'Price Change %';
+            document.getElementById('requiredMove').textContent = 
+                `${changePercent >= 0 ? '+' : ''}${changePercent}%`;
+            document.getElementById('targetPrice').innerHTML = 
+                `₹${targetPriceValue.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})} <span id="percentageMove" style="font-size: 0.75em; color: #666;">(${changePercent >= 0 ? '+' : ''}${changePercent}%)</span>`;
+            
+            // Show profit column
+            document.getElementById('profitColumn').style.display = 'block';
+            document.getElementById('profitAmount').textContent = 
+                `${profit >= 0 ? '+' : ''}₹${Math.abs(profit).toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            document.getElementById('profitAmount').style.color = profit >= 0 ? '#007AFF' : '#e74c3c';
+        } else {
+            // Clear results if no change percent
+            document.getElementById('moveLabel').textContent = 'Price Change %';
+            document.getElementById('requiredMove').textContent = '--';
+            document.getElementById('targetPrice').innerHTML = '-- <span style="font-size: 0.75em; color: #666;">(--)</span>';
+            document.getElementById('profitColumn').style.display = 'none';
+        }
+        
+    } else if (mode === 'target') {
+        // Target Profit Mode
+        const targetAmountInput = document.getElementById('targetAmount');
+        const targetAmount = targetAmountInput ? parseFloat(targetAmountInput.value) || 0 : 0;
+        
+        if (targetAmount > 0) {
+            const requiredTotalValue = investment + targetAmount;
+            const requiredPrice = requiredTotalValue / shares;
+            const priceMove = requiredPrice - price;
+            const percentageMove = (priceMove / price) * 100;
+            
+            // Update labels and display
+            document.getElementById('moveLabel').textContent = 'Required Move';
+            document.getElementById('requiredMove').textContent = 
+                `${priceMove >= 0 ? '+' : ''}₹${Math.abs(priceMove).toFixed(2)}`;
+            document.getElementById('targetPrice').innerHTML = 
+                `₹${requiredPrice.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})} <span id="percentageMove" style="font-size: 0.75em; color: #666;">(${percentageMove >= 0 ? '+' : ''}${percentageMove.toFixed(2)}%)</span>`;
+            
+            // Hide profit column in target mode
+            document.getElementById('profitColumn').style.display = 'none';
+        } else {
+            // Clear results if no target amount
+            document.getElementById('moveLabel').textContent = 'Required Move';
+            document.getElementById('requiredMove').textContent = '--';
+            document.getElementById('targetPrice').innerHTML = '-- <span style="font-size: 0.75em; color: #666;">(--)</span>';
+            document.getElementById('profitColumn').style.display = 'none';
+        }
+    } else if (mode === 'price') {
+        // Target Price Mode
+        const targetPriceInputElement = document.getElementById('targetPriceInput');
+        const targetPriceValue = targetPriceInputElement ? parseFloat(targetPriceInputElement.value) || 0 : 0;
+        
+        if (targetPriceValue > 0) {
+            const priceMove = targetPriceValue - price;
+            const percentageMove = (priceMove / price) * 100;
+            const totalValue = targetPriceValue * shares;
+            const profit = totalValue - investment;
+            
+            // Update labels and display
+            document.getElementById('moveLabel').textContent = 'Price Move';
+            document.getElementById('requiredMove').textContent = 
+                `${priceMove >= 0 ? '+' : ''}₹${Math.abs(priceMove).toFixed(2)}`;
+            document.getElementById('targetPrice').innerHTML = 
+                `₹${targetPriceValue.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})} <span id="percentageMove" style="font-size: 0.75em; color: #666;">(${percentageMove >= 0 ? '+' : ''}${percentageMove.toFixed(2)}%)</span>`;
+            
+            // Show profit column in price mode
+            document.getElementById('profitColumn').style.display = 'block';
+            document.getElementById('profitAmount').textContent = 
+                `${profit >= 0 ? '+' : ''}₹${Math.abs(profit).toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            document.getElementById('profitAmount').style.color = profit >= 0 ? '#007AFF' : '#e74c3c';
+        } else {
+            // Clear results if no target price
+            document.getElementById('moveLabel').textContent = 'Price Move';
+            document.getElementById('requiredMove').textContent = '--';
+            document.getElementById('targetPrice').innerHTML = '-- <span style="font-size: 0.75em; color: #666;">(--)</span>';
+            document.getElementById('profitColumn').style.display = 'none';
+        }
+    }
+
+    // Default percentage targets for reference
+    const percentages = [-10, 5, 10];
     const targetsDiv = document.getElementById('targets');
     targetsDiv.innerHTML = '';
     
@@ -274,7 +462,10 @@ function calc() {
 }
 
 // Initialize
-document.addEventListener('DOMContentLoaded', calc);
+document.addEventListener('DOMContentLoaded', function() {
+    toggleMode(); // Set initial mode
+    calc(); // Run initial calculation
+});
 </script>
 
 </body>
