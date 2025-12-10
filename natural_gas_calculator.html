@@ -250,14 +250,14 @@
                 <div class="input-field">
                     <label for="entryPrice">Entry Price (₹)</label>
                     <div class="price-container">
-                        <input type="number" id="entryPrice" value="100" step="1" oninput="calculate()">
+                        <input type="number" id="entryPrice" value="20" step="1" oninput="calculate()">
                         <button class="clear-btn" onclick="clearEntry()">×</button>
                     </div>
                 </div>
                 
                 <div class="input-field">
                     <label for="quantity">Lots</label>
-                    <input type="number" id="quantity" value="10" oninput="calculate()">
+                    <input type="number" id="quantity" value="2" oninput="calculate()">
                 </div>
                 
                 <div class="input-field">
@@ -267,7 +267,7 @@
                         <input type="number" id="targetAmount" value="1500" step="100" oninput="calculate()">
                     </div>
                     <div id="changeField" style="display: none; position: relative;">
-                        <input type="number" id="changePoint" value="10" step="0.1" placeholder="±0.0" oninput="calculate()">
+                        <input type="number" id="changePoint" value="1" step="0.5" placeholder="±0.0" oninput="calculate()">
                         <button class="clear-btn" onclick="clearChange()">×</button>
                     </div>
                 </div>
@@ -276,11 +276,11 @@
                     <label style="margin-bottom: 4px; font-size: 0.75em; color: #333; font-weight: 600;">Mode</label>
                     <div style="display: flex; flex-direction: column; gap: 2px; justify-content: center; height: 40px;">
                         <div style="display: flex; align-items: center; gap: 4px;">
-                            <input type="radio" id="targetMode" name="calculationMode" value="target" checked onchange="toggleMode(); calculate();" style="margin: 0; width: 12px; height: 12px;">
+                            <input type="radio" id="targetMode" name="calculationMode" value="target" onchange="toggleMode(); calculate();" style="margin: 0; width: 12px; height: 12px;">
                             <label for="targetMode" style="margin: 0; font-size: 0.65em; color: #666; font-weight: 500; white-space: nowrap;">Target</label>
                         </div>
                         <div style="display: flex; align-items: center; gap: 3px;">
-                            <input type="radio" id="changeMode" name="calculationMode" value="change" onchange="toggleMode(); calculate();" style="margin: 0; width: 12px; height: 12px;">
+                            <input type="radio" id="changeMode" name="calculationMode" value="change" checked onchange="toggleMode(); calculate();" style="margin: 0; width: 12px; height: 12px;">
                             <label for="changeMode" style="margin: 0; font-size: 0.65em; color: #666; font-weight: 500; white-space: nowrap;">Change</label>
                         </div>
                     </div>
@@ -319,7 +319,7 @@
                 </div>
                 <div class="info-card">
                     <div class="title">Total Exposure</div>
-                    <div class="value" id="totalExposure">₹5,00,000</div>
+                    <div class="value" id="totalExposure">₹10,000</div>
                 </div>
                 <div class="info-card">
                     <div class="title">Risk per Lot</div>
@@ -328,14 +328,14 @@
             </div>
 
             <div class="investment-info">
-                <p id="totalLots">📊 Total Lots: 10</p>
-                <p id="totalMMBtu">💨 Total MMBtu: 2,500 MMBtu</p>
-                <p id="lotValue">💰 Total Risk: ₹2,500 per ₹1 move</p>
+                <p id="totalLots">📊 Total Lots: 2</p>
+                <p id="totalMMBtu">💨 Total MMBtu: 500 MMBtu</p>
+                <p id="lotValue">💰 Total Risk: ₹500 per ₹1 move</p>
             </div>
 
             <div class="formula-note" id="formulaNote">
                 <strong>Formula:</strong> Required Move = Target Profit ÷ (Quantity × ₹250)<br>
-                <strong>Example:</strong> ₹2500 ÷ (10 × ₹250) = ₹1 move needed
+                <strong>Example:</strong> ₹2500 ÷ (2 × ₹250) = ₹1 move needed
             </div>
         </div>
     </div>
@@ -355,7 +355,7 @@ function switchContract() {
         contractSize.textContent = '250 MMBtu';
         tickValue.textContent = '₹250 per ₹1';
         riskPerLot.textContent = '₹250 per ₹1';
-        quantityInput.value = '10'; // Default 10 lots for NATGAS MINI
+        quantityInput.value = '2'; // Default 10 lots for NATGAS MINI
     } else {
         subtitle.textContent = 'NATURALGAS - Full Contract';
         contractSize.textContent = '1250 MMBtu';
